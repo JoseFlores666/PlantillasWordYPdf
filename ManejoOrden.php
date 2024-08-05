@@ -11,7 +11,7 @@ $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
 
 // Capturando datos del formulario
 $fecha = $_POST['fechaOrden'];
-$folioEx = $_POST['folioExterno'];
+$folioEx = $_POST['folio'];
 
 $areasoli = $_POST['areasoli'];
 $solicita = $_POST['solicita'];
