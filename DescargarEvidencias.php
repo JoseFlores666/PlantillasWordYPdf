@@ -43,6 +43,10 @@ function procesarPlantilla()
     $archivoFolio = 'folio.txt';
     $folioDesdeArchivo = file_exists($archivoFolio) ? trim(file_get_contents($archivoFolio)) : '';
 
+    // Leer el contenido del archivo descripcion.txt
+    $archivoDescripcion = 'descripcion.txt';
+    $descripcionDesdeArchivo = file_exists($archivoDescripcion) ? trim(file_get_contents($archivoDescripcion)) : '';
+
     // Cargar la plantilla
     $template = 'PlantillaEvidencias.docx';
     $TBS->LoadTemplate($template, OPENTBS_ALREADY_UTF8);
@@ -59,8 +63,9 @@ function procesarPlantilla()
         'imagen8.jpg'
     ];
 
-    // Usar el valor leído del archivo para el campo 'folio'
+    // Usar el valor leído del archivo para los campos 'folio' y 'descripcion'
     $TBS->MergeField('folio', $folioDesdeArchivo);
+    $TBS->MergeField('desc', $descripcionDesdeArchivo);
 
     // Configurar imágenes en VarRef usando if
     for ($i = 1; $i <= 8; $i++) {
