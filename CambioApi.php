@@ -1,7 +1,9 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app"); // Cambiado para aceptar solicitudes desde Vercel
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Añadir otros métodos si es necesario
+header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Permitir los headers necesarios
+header("Content-Type: application/json");
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apiKey'])) {
     $apiKey = $_POST['apiKey'];
