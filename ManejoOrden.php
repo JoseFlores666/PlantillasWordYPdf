@@ -47,6 +47,12 @@ $observaciones = $_POST['obs'] ?? '';
 
 $items = $_POST['items'] ?? [];
 
+//otra cosa
+$personalDEP = $_POST['personalDEP'] ?? '';
+$conformidad = $_POST['directivo'] ?? '';
+$tecnico= $_POST['tecnicoEncargado'] ?? '';
+
+
 // Cargando template la plantilla 
 $template = 'PlantillaOrden.docx';
 $TBS->LoadTemplate($template, OPENTBS_ALREADY_UTF8);
@@ -67,6 +73,17 @@ $TBS->MergeField('fechaA.mes', $mesA);
 $TBS->MergeField('fechaA.año', $yearA);
 
 $TBS->MergeField('desc.servicio', $descripcion);
+
+
+
+$TBS->MergeField('personal', $personalDEP);
+$TBS->MergeField('solicitud', $conformidad);
+$TBS->MergeField('tecnico', $tecnico);
+
+
+
+
+
 
 //los tipos
 $TBS->MergeField('m', $tipoMantenimiento === 'Mobiliario' ? 'X' : ' ');
