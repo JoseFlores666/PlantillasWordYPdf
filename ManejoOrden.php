@@ -1,9 +1,23 @@
 <?php
-header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app"); // Cambiado para aceptar solicitudes desde Vercel
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Añadir otros métodos si es necesario
-header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Permitir los headers necesarios
+$allowed_origins = [
+    'http://localhost:5173',
+    'https://frontend-wheat-psi.vercel.app'
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
+
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
 
+// Manejar solicitudes OPTIONS (preflight requests)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit; // Terminar la solicitud OPTIONS aquí
+}
 
 include_once 'tbs_class.php';
 include_once 'plugins/tbs_plugin_opentbs.php';
@@ -12,27 +26,26 @@ $TBS = new clsTinyButStrong;
 $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
 
 // Capturando datos del formulario
-$fecha = $_POST['fechaOrden'];
-$folioEx = $_POST['folio'];
+$fecha = $_POST['fechaOrden'] ?? '';
+$folioEx = $_POST['folio'] ?? '';
 
-$areasoli = $_POST['areasoli'];
-$solicita = $_POST['solicita'];
-$edificio = $_POST['edificio'];
+$areasoli = $_POST['areasoli'] ?? '';
+$solicita = $_POST['solicita'] ?? '';
+$edificio = $_POST['edificio'] ?? '';
 
-$tipoMantenimiento = $_POST['tipoMantenimiento'];
-$tipoTrabajo = $_POST['tipoTrabajo'];
-$tipoSolicitud = $_POST['tipoSolicitud'];
-$descripcion = $_POST['descripcion'];
+$tipoMantenimiento = $_POST['tipoMantenimiento'] ?? '';
+$tipoTrabajo = $_POST['tipoTrabajo'] ?? '';
+$tipoSolicitud = $_POST['tipoSolicitud'] ?? '';
+$descripcion = $_POST['descripcion'] ?? '';
 
-// $fechaAtencion = $_POST['fechaAtencion'];
+$fechaAtencion = $_POST['fechaAtencion'] ?? '';
 
 list($year, $mes, $dia) = explode('-', $fecha);
-// list($yearA, $mesA, $diaA) = explode('-', $fechaAtencion);
+list($yearA, $mesA, $diaA) = explode('-', $fechaAtencion);
 
-// $observaciones = $_POST['obs'];
+$observaciones = $_POST['obs'] ?? '';
 
-// Capturando cantidades y descripciones de insumos
-// $items = $_POST['items'];
+$items = $_POST['items'] ?? [];
 
 // Cargando template la plantilla 
 $template = 'PlantillaOrden.docx';
@@ -49,9 +62,9 @@ $TBS->MergeField('fecha.dia', $dia);
 $TBS->MergeField('fecha.mes', $mes);
 $TBS->MergeField('fecha.año', $year);
 
-// $TBS->MergeField('fechaA.dia', $diaA);
-// $TBS->MergeField('fechaA.mes', $mesA);
-// $TBS->MergeField('fechaA.año', $yearA);
+$TBS->MergeField('fechaA.dia', $diaA);
+$TBS->MergeField('fechaA.mes', $mesA);
+$TBS->MergeField('fechaA.año', $yearA);
 
 $TBS->MergeField('desc.servicio', $descripcion);
 
@@ -65,25 +78,28 @@ $TBS->MergeField('c', $tipoTrabajo === 'Preventivo' ? ' ' : 'X');
 $TBS->MergeField('n', $tipoSolicitud === 'Normal' ? 'X' : ' ');
 $TBS->MergeField('u', $tipoSolicitud === 'Normal' ? ' ' : 'X');
 
-// Procesar insumos
-// $items_count = count($items);
-// $max_items = 4;
-// if ($items_count < $max_items) {
-//     // Agregar elementos vacíos hasta llegar a 10
-//     for ($i = $items_count; $i < $max_items; $i++) {
-//         $items[] = array(
-//             'cantidad' => '',
-//             'descripcion' => ''
-//         );
-//     }
-// }
+$items = isset($_POST['items']) ? json_decode($_POST['items'], true) : [];
+$items = is_array($items) ? $items : [];
 
-// foreach ($items as $index => $item) {
-//     $TBS->MergeField("cant." . ($index + 1), $item['cantidad']);
-//     $TBS->MergeField("desc." . ($index + 1), $item['descripcion']);
-// }
+$items_count = count($items);
+$max_items = 4;
+if ($items_count < $max_items) {
+    for ($i = $items_count; $i < $max_items; $i++) {
+        $items[] = array(
+            'cantidad' => '',
+            'descripcion' => '',
+            'unidad' => '' 
+        );
+    }
+}
 
-// $TBS->MergeField('observaciones', $observaciones);
+foreach ($items as $index => $item) {
+    $TBS->MergeField("cant." . ($index + 1), $item['cantidad']);
+    $TBS->MergeField("desc." . ($index + 1), $item['descripcion']);
+    $TBS->MergeField("util." . ($index + 1), $item['unidad']); 
+}
+
+$TBS->MergeField('observaciones', $observaciones);
 
 $TBS->PlugIn(OPENTBS_DELETE_COMMENTS);
 

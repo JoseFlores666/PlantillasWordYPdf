@@ -1,14 +1,12 @@
 <?php
-header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app"); // Cambiado para aceptar solicitudes desde Vercel
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Añadir otros métodos si es necesario
-header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Permitir los headers necesarios
+header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); 
+header("Access-Control-Allow-Headers: Content-Type, Authorization"); 
 header("Content-Type: application/json");
-
 
 include_once 'tbs_class.php';
 include_once 'plugins/tbs_plugin_opentbs.php';
 
-// Carpeta para guardar las imágenes (directorio raíz del proyecto)
 $directorioRaiz = __DIR__; // Obtiene el directorio actual
 $carpetaArchivos = $directorioRaiz; // Guardar en el directorio raíz
 

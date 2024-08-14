@@ -1,9 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app"); // Cambiado para aceptar solicitudes desde Vercel
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Añadir otros métodos si es necesario
-header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Permitir los headers necesarios
+header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); 
+header("Access-Control-Allow-Headers: Content-Type, Authorization"); 
 header("Content-Type: application/json");
-
 
 $output_file_name = 'SobrescritoSolicitud.docx';
 

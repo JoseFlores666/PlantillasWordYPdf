@@ -1,9 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app"); // Cambiado para aceptar solicitudes desde Vercel
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Añadir otros métodos si es necesario
-header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Permitir los headers necesarios
+header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); 
+header("Access-Control-Allow-Headers: Content-Type, Authorization"); 
 header("Content-Type: application/json");
-
 
 include_once 'tbs_class.php';
 include_once 'plugins/tbs_plugin_opentbs.php';
@@ -11,12 +10,10 @@ include_once 'plugins/tbs_plugin_opentbs.php';
 $TBS = new clsTinyButStrong;
 $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
 
-// Función para sanitizar entrada
 function sanitizeInput($input) {
     return htmlspecialchars(stripslashes(trim($input)));
 }
 
-// Capturando datos del formulario
 $fecha = sanitizeInput($_POST['fecha']);
 $suministro = sanitizeInput($_POST['suministro']);
 $pc = sanitizeInput($_POST['pc']);
@@ -29,14 +26,11 @@ $jefeInmediato = sanitizeInput($_POST['JefeInmediato'] ?? '');
 $validacion = sanitizeInput($_POST['Validacion'] ?? '');
 $autorizo = sanitizeInput($_POST['Autorizo'] ?? '');
 
-// Dividir la fecha en día, mes y año
 list($year, $mes, $dia) = explode('-', $fecha);
 
-// Cargando template la Plantilla
 $template = 'PlantillaSolicitud.docx';
 $TBS->LoadTemplate($template, OPENTBS_ALREADY_UTF8);
 
-// Escribir Nuevos campos
 $TBS->MergeField('area.nombre', 'Administración y Finanzas Mantenimiento y Servicios Generales');
 $TBS->MergeField('fecha.dia', $dia);
 $TBS->MergeField('fecha.mes', $mes);
@@ -69,7 +63,6 @@ $TBS->PlugIn(OPENTBS_DELETE_COMMENTS);
 $output_file_name = 'SobrescritoSolicitud.docx';
 $TBS->Show(OPENTBS_FILE, $output_file_name);
 
-// Ejecutar comando para convertir a PDF y manejar errores
 exec('node apiPDF.js SobrescritoSolicitud.docx ResultadoSoli.pdf', $output, $return_var);
 
 if ($return_var !== 0) {
