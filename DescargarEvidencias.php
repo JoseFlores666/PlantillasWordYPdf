@@ -1,7 +1,17 @@
 <?php
-header("Access-Control-Allow-Origin: https://frontend-wheat-psi.vercel.app");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); 
-header("Access-Control-Allow-Headers: Content-Type, Authorization"); 
+$allowed_origins = [
+    'http://localhost:5173',
+    'https://frontend-wheat-psi.vercel.app'
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
+
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
 
 include_once 'tbs_class.php';
